@@ -5,13 +5,20 @@
 #include <regex>
 using namespace std;
 
-class BankAccount
-{
-    private:
+class BankAccount{
 
-    public:
+protected:
+    string accountID;
+    float balance;
 
+public:
+
+    BankAccount(string acc);
+    BankAccount(string acc,float bal);
+    bool withdraw(float amount);
+    void deposit(float amount);
 };
+
 
 class SavingBankAccount : public BankAccount
 {
@@ -33,10 +40,18 @@ class Client
         bool isValidPhoneNumber(string input);
 };
 
-class BankApplication
-{
-    public:
+class BankingApplication{
+
+protected:
+
+    void displayMenu();
+    int get_choice();
+
+public:
+
+    void run();
 
 };
+
 
 #endif //ASSIGNMENT2_OOP_BANK_SYSTEM_LIB_H
