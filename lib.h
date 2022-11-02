@@ -15,8 +15,10 @@ public:
 
     BankAccount(string acc);
     BankAccount(string acc,float bal);
+    void CreateAccount();
     bool withdraw(float amount);
     void deposit(float amount);
+
 };
 
 
@@ -46,11 +48,14 @@ protected:
 
     void displayMenu();
     int get_choice();
+    Client cli;
+    BankAccount bAccount;
 
 public:
 
     void run();
 
+    void CreateAccount();
 };
 
 

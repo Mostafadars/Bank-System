@@ -73,7 +73,6 @@ void BankingApplication :: run()
     switch (get_choice())
     {
         case 1:
-
             // Create a New Account
 
             break;
@@ -96,4 +95,33 @@ void BankingApplication :: run()
 
             break;
     }
+}
+
+void BankingApplication :: CreateAccount()
+{
+    string name, address, phone ,accountType , id ;
+    float balance ;
+
+    cout<<"Please Enter Client Name =========> ";
+    getline(cin,name);
+
+    cout<< "Please Enter Client Address =======> ";
+    getline(cin,address);
+
+    cout<<"Please Enter Client Phone =======> ";
+    cin>>phone;
+
+    cout<<"What Type of Account Do You Like? (1) Basic (2) Saving – Type 1 or 2 =========> ";
+    cin>>accountType;
+
+    cout<<"Please Enter the Starting Balance =========> ";
+    cin>>balance;
+
+    id = "FCAI-001";
+
+    cout<<"An account was created with ID "<< id << "and Starting Balance " << balance << " L.E.";
+
+    Client c (name ,address , phone);
+    BankAccount b (id ,balance);
+
 }
