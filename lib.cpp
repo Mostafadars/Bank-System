@@ -47,6 +47,21 @@ bool Client :: isValidPhoneNumber(string input)
     return regex_match(input, valid_input);
 }
 
+string Client :: get_name()
+{
+    return name;
+}
+
+string Client :: get_address()
+{
+    return address;
+}
+
+string Client ::get_phone_number()
+{
+    return phone_number;
+}
+
 /*      Functions Of BankApplication Class      */
 
 

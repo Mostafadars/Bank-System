@@ -40,6 +40,9 @@ class Client
     public:
         Client(string c_name, string c_address, string c_phone_number);
         bool isValidPhoneNumber(string input);
+        string get_name();
+        string get_address();
+        string get_phone_number();
 };
 
 class BankingApplication{
