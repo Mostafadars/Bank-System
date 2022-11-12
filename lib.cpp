@@ -31,6 +31,28 @@ void BankAccount :: deposit(float amount)
 
 /*      Functions Of SavingBankAccount Class      */
 
+SavingBankAccount ::SavingBankAccount(string acc, float bal, double min_bal) : BankAccount(acc, bal)
+{
+    minimumBalance = min_bal;
+}
+
+bool SavingBankAccount :: withdraw(float amount)
+{
+    if(amount <= balance && amount > minimumBalance)
+    {
+        balance -= amount;
+        return true;
+    }
+    return false;
+}
+
+void SavingBankAccount :: deposit(float amount)
+{
+    if(amount >= 100)
+    {
+        balance += amount;
+    }
+}
 
 /*      Functions Of Client Class      */
 
@@ -43,7 +65,7 @@ Client :: Client(string c_name, string c_address, string c_phone_number)
 
 bool Client :: isValidPhoneNumber(string input)
 {
-    regex valid_input("\\\\(\\\\d{3}\\\\) \\\\d{3}-\\\\d{4}");
+    regex valid_input("^01[0125][0-9]{8}$");
     return regex_match(input, valid_input);
 }
 

@@ -24,10 +24,13 @@ public:
 
 class SavingBankAccount : public BankAccount
 {
-    private:
+    protected:
+        double minimumBalance = 1000.0;
 
     public:
-
+    SavingBankAccount(string acc,float bal,double min_bal);
+    bool withdraw(float amount);
+    void deposit(float amount);
 };
 
 class Client
