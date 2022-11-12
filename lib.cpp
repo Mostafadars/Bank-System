@@ -1,3 +1,4 @@
+#include <fstream>
 #include "lib.h"
 
 /*      Functions Of BankAccount Class      */
@@ -88,6 +89,10 @@ void Client :: set_bank_account(BankAccount *ba)
 {
     this->ba = ba;
 }
+Client ::Client()
+{
+
+}
 
 BankAccount* Client :: get_bank_account()
 {
@@ -114,6 +119,12 @@ int BankingApplication :: get_choice()
     return choice;
 }
 
+BankingApplication ::BankingApplication()
+{
+
+}
+
+
 void BankingApplication :: run()
 {
     displayMenu();
@@ -121,11 +132,10 @@ void BankingApplication :: run()
     {
         case 1:
             // Create a New Account
-
+            CreateAccount();
             break;
 
         case 2:
-
             // List Clients and Accounts
 
             break;
@@ -146,17 +156,28 @@ void BankingApplication :: run()
 
 void BankingApplication :: CreateAccount()
 {
-    string name, address, phone ,accountType , id ;
+    string name, address, phone ,id ;
+    char accountType;
     float balance ;
+    bool valid_phone = false;
+    Client c ;
 
-    cout<<"Please Enter Client Name =========> ";
+    cout<<"Please Enter Client Name =========>";
     getline(cin,name);
+    cin.ignore();
 
-    cout<< "Please Enter Client Address =======> ";
+    cout<< "Please Enter Client Address =======>";
     getline(cin,address);
+    cin.ignore();
 
-    cout<<"Please Enter Client Phone =======> ";
-    cin>>phone;
+    while (!valid_phone)
+    {
+        cout<<"Please Enter Client Phone =======>";
+        cin>>phone;
+        valid_phone = c.isValidPhoneNumber(phone);
+        if (valid_phone)
+            break;
+    }
 
     cout<<"What Type of Account Do You Like? (1) Basic (2) Saving – Type 1 or 2 =========> ";
     cin>>accountType;
@@ -165,10 +186,50 @@ void BankingApplication :: CreateAccount()
     cin>>balance;
 
     id = "FCAI-001";
+    switch (accountType)
+    {
+        case '1':
+        {
+            BankAccount b (id ,balance);
+            bptr = &b;
+
+            cptr->set_bank_account(bptr);
+        }
+            break;
+
+        case '2':
+        {
+            SavingBankAccount sb (id ,balance);
+            bptr = &b;
+
+            cptr->set_bank_account(bptr);
+        }
+
+
+            break;
+
+    }
+
+
+
+
 
     cout<<"An account was created with ID "<< id << "and Starting Balance " << balance << " L.E.";
 
-    Client c (name ,address , phone);
-    BankAccount b (id ,balance);
+    Client cli (name ,address , phone);
+    cptr = &cli;
+
+
+
 
 }
+
+//void BankingApplication :: add_to_file()
+//{
+//    fstream dataFile;
+//    dataFile.open
+//}
+//void BankingApplication ::Get_client_data()
+//{
+//
+//}

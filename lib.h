@@ -43,6 +43,7 @@ class Client
 
     public:
         Client(string c_name, string c_address, string c_phone_number);
+        Client();
         bool isValidPhoneNumber(string input);
         string get_name();
         string get_address();
@@ -58,14 +59,16 @@ protected:
 
     void displayMenu();
     int get_choice();
-    Client cli;
-    BankAccount bAccount;
+    void add_to_file();
+    Client *cptr;
+    BankAccount *bptr;
 
 public:
-
+    BankingApplication();
     void run();
 
     void CreateAccount();
+    void Get_client_data();
 };
 
 
