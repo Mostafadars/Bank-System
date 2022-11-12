@@ -84,6 +84,16 @@ string Client ::get_phone_number()
     return phone_number;
 }
 
+void Client :: set_bank_account(BankAccount *ba)
+{
+    this->ba = ba;
+}
+
+BankAccount* Client :: get_bank_account()
+{
+    return ba;
+}
+
 /*      Functions Of BankApplication Class      */
 
 

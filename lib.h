@@ -39,6 +39,7 @@ class Client
         string name;
         string address;
         string phone_number;
+        BankAccount *ba;
 
     public:
         Client(string c_name, string c_address, string c_phone_number);
@@ -46,6 +47,9 @@ class Client
         string get_name();
         string get_address();
         string get_phone_number();
+        void set_bank_account(BankAccount *ba);
+        BankAccount* get_bank_account();
+
 };
 
 class BankingApplication{
