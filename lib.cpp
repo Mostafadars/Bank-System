@@ -23,9 +23,10 @@ bool BankAccount :: withdraw(float amount)
     return false;
 }
 
-void BankAccount :: deposit(float amount)
+bool BankAccount :: deposit(float amount)
 {
     balance += amount;
+    return true;
 }
 
 string BankAccount :: getAccountId()
@@ -47,7 +48,7 @@ SavingBankAccount ::SavingBankAccount(string acc, float bal, double min_bal) : B
 
 bool SavingBankAccount :: withdraw(float amount)
 {
-    if(amount <= balance && amount > minimumBalance)
+    if(amount <= balance && (balance-amount) > minimumBalance)
     {
         balance -= amount;
         return true;
@@ -55,12 +56,16 @@ bool SavingBankAccount :: withdraw(float amount)
     return false;
 }
 
-void SavingBankAccount :: deposit(float amount)
+bool SavingBankAccount :: deposit(float amount)
 {
     if(amount >= 100)
     {
         balance += amount;
+        return true;
     }
+    else
+        cout << "You can't deposit less than 100 L.E"<<endl;
+        return false;
 }
 
 
@@ -171,11 +176,11 @@ void BankingApplication :: CreateAccount()
     float balance ;
 
     cin.sync();
-    cout <<"Please Enter Client Name =========> ";
+    cout <<"Please Enter Client Name =========>"<<setw(10);
     getline(cin,name);
 
     cin.sync();
-    cout << "Please Enter Client Address =======> ";
+    cout << "Please Enter Client Address =======>";
     getline(cin,address);
 
     cout << "Please Enter Client Phone =======>";
@@ -217,10 +222,22 @@ void BankingApplication :: CreateAccount()
 
 
     ofstream file("tst.txt", ios :: app);
-    BankAccount *ba = new BankAccount(id,balance);
-    Client *c = new Client(name, address, phone, accountType2);
-    c->set_bank_account(ba);
-    file << c->get_name() << "," << c->get_address() << "," << c->get_phone_number() << "," << c->get_bank_type() << "," << c->get_bank_account()->getAccountId() << "," << c->get_bank_account()->getBalance() << endl;
+    if(accountType2 == "Saving" )
+    {
+        SavingBankAccount*ba = new SavingBankAccount(id,balance);
+        Client *c = new Client(name, address, phone, accountType2);
+        c->set_bank_account(ba);
+        file << c->get_name() << "," << c->get_address() << "," << c->get_phone_number() << "," << c->get_bank_type() << "," << c->get_bank_account()->getAccountId() << "," << c->get_bank_account()->getBalance() << endl;
+    }
+    
+    else
+    {
+        BankAccount *ba = new BankAccount(id,balance);
+        Client *c = new Client(name, address, phone, accountType2);
+        c->set_bank_account(ba);
+        file << c->get_name() << "," << c->get_address() << "," << c->get_phone_number() << "," << c->get_bank_type() << "," << c->get_bank_account()->getAccountId() << "," << c->get_bank_account()->getBalance() << endl;
+    }
+
     file.close();
 
 }
@@ -287,8 +304,8 @@ void BankingApplication :: Withdraw()
 
         getline(file,address,',');
         getline(file,phone,',');
+        getline(file, accountType,',');
         getline(file,acc_id1,',');
-        getline(file, accountType, ',');
         file >> bal;
         if(acc_id1 == acc_id)
         {
@@ -297,19 +314,40 @@ void BankingApplication :: Withdraw()
             cout << "Balance: " << bal << endl;
             cout << "Please Enter The Amount to Withdraw:";
             cin >> amount;
-            BankAccount *ba = new BankAccount(acc_id1,bal);
-            Client *c = new Client(name, address, phone, accountType);
-            c->set_bank_account(ba);
 
 
-            if(c->get_bank_account()->withdraw(amount))
+            if (accountType == "Saving")
             {
-                file.close();
-                cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
-                update_file(acc_id,c->get_bank_account()->getBalance());
+                SavingBankAccount *ba = new SavingBankAccount(acc_id1,bal);
+                Client *c = new Client(name, address, phone, accountType);
+                c->set_bank_account(ba);
+
+
+                if(c->get_bank_account()->withdraw(amount))
+                {
+                    file.close();
+                    cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+                    update_file(acc_id,c->get_bank_account()->getBalance());
+                }
+                else
+                    cout << "Sorry no enough Balance" << endl;
             }
             else
-                cout << "Sorry no enough Balance" << endl;
+            {
+                BankAccount *ba = new BankAccount(acc_id1,bal);
+                Client *c = new Client(name, address, phone, accountType);
+                c->set_bank_account(ba);
+
+                if(c->get_bank_account()->withdraw(amount))
+                {
+                    file.close();
+                    cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+                    update_file(acc_id,c->get_bank_account()->getBalance());
+                }
+                else
+                    cout << "Sorry no enough Balance" << endl;
+            }
+
         }
     }
     if(file.is_open())
@@ -335,8 +373,8 @@ void BankingApplication :: Deposit()
 
         getline(file,address,',');
         getline(file,phone,',');
+        getline(file, accountType,',');
         getline(file,acc_id1,',');
-        getline(file, accountType, ',');
         file>>bal;
         if(acc_id1 == acc_id)
         {
@@ -345,16 +383,35 @@ void BankingApplication :: Deposit()
             cout << "Balance: " << bal << endl;
             cout << "Please Enter The Amount to Deposit:";
             cin >> amount;
-            BankAccount *ba = new BankAccount(acc_id1,bal);
-            Client *c = new Client(name, address, phone, accountType);
-            c->set_bank_account(ba);
+            if(accountType == "Saving")
+            {
+                SavingBankAccount *ba = new SavingBankAccount(acc_id1,bal);
+                Client *c = new Client(name, address, phone, accountType);
+                c->set_bank_account(ba);
 
 
-            c->get_bank_account()->deposit(amount);
-            cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
-            file.close();
-            update_file(acc_id,c->get_bank_account()->getBalance());
+                if(c->get_bank_account()->deposit(amount))
+                {
+                    cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+                    file.close();
+                    update_file(acc_id,c->get_bank_account()->getBalance());
+                }
 
+
+            }
+            else
+            {
+                BankAccount *ba = new BankAccount(acc_id1,bal);
+                Client *c = new Client(name, address, phone, accountType);
+                c->set_bank_account(ba);
+
+
+                c->get_bank_account()->deposit(amount);
+                cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+                file.close();
+                update_file(acc_id,c->get_bank_account()->getBalance());
+
+            }
 
         }
     }
@@ -381,7 +438,7 @@ int number_lines()
         Target.get(ch);
     }
     Target.close();
-    return lineNum;
+    return lineNum++;
 
 }
 
@@ -400,17 +457,17 @@ void update_file(string id ,float new_bal)
 
         getline(file,address,',');
         getline(file,phone,',');
+        getline(file, accountType,',');
         getline(file,acc_id,',');
-        getline(file, accountType, ',');
         file>>bal;
         target << name << ',' << address << ',' << phone << ',' << accountType << ',' << acc_id << ',';
         if(acc_id == id)
         {
-            target << new_bal;
+            target << new_bal << endl;
         }
         else
         {
-            target << bal;
+            target << bal << endl;
         }
     }
     file.close();

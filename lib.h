@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <regex>
+#include <iomanip>
 using namespace std;
 
 class BankAccount{
@@ -16,9 +17,8 @@ public:
 
     BankAccount(string acc);
     BankAccount(string acc,float bal);
-    void CreateAccount();
-    bool withdraw(float amount);
-    void deposit(float amount);
+    virtual bool withdraw(float amount);
+    virtual bool deposit(float amount);
     string getAccountId();
     float getBalance();
 };
@@ -27,12 +27,12 @@ public:
 class SavingBankAccount : public BankAccount
 {
     protected:
-        double minimumBalance = 1000.0;
+        double minimumBalance;
 
     public:
-    SavingBankAccount(string acc,float bal,double min_bal);
+    SavingBankAccount(string acc,float bal,double min_bal = 1000.0);
     bool withdraw(float amount);
-    void deposit(float amount);
+    bool deposit(float amount);
 };
 
 class Client
@@ -63,7 +63,6 @@ protected:
     void displayMenu();
     int get_choice();
     Client* cli;
-    BankAccount* bAccount;
 
 public:
     BankingApplication();
