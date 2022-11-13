@@ -41,14 +41,16 @@ class Client
         string name;
         string address;
         string phone_number;
+        string bank_type;
         BankAccount *ba;
 
     public:
-        Client(string c_name, string c_address, string c_phone_number);
+        Client(string c_name, string c_address, string c_phone_number, string c_bank_type);
         bool isValidPhoneNumber(string input);
         string get_name();
         string get_address();
         string get_phone_number();
+        string get_bank_type();
         void set_bank_account(BankAccount *ba);
         BankAccount* get_bank_account();
 
