@@ -239,8 +239,9 @@ void BankingApplication :: getClientData()
 
         getline(file,address,',');
         getline(file,phone,',');
-        getline(file,acc_id,',');
         getline(file, accountType,',');
+        getline(file,acc_id,',');
+
         file >> bal;
 
 
