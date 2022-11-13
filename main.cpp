@@ -3,7 +3,7 @@
 
 int main()
 {
-    BankingApplication application;
-    application.run();
+    BankingApplication app;
+    app.run();
     return 0;
 }

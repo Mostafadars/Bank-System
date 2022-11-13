@@ -1,4 +1,3 @@
-#include <fstream>
 #include "lib.h"
 
 /*      Functions Of BankAccount Class      */
@@ -29,6 +28,15 @@ void BankAccount :: deposit(float amount)
     balance += amount;
 }
 
+string BankAccount :: getAccountId()
+{
+    return accountID;
+}
+
+float BankAccount :: getBalance()
+{
+    return balance;
+}
 
 /*      Functions Of SavingBankAccount Class      */
 
@@ -54,6 +62,7 @@ void SavingBankAccount :: deposit(float amount)
         balance += amount;
     }
 }
+
 
 /*      Functions Of Client Class      */
 
@@ -89,10 +98,6 @@ void Client :: set_bank_account(BankAccount *ba)
 {
     this->ba = ba;
 }
-Client ::Client()
-{
-
-}
 
 BankAccount* Client :: get_bank_account()
 {
@@ -123,113 +128,188 @@ BankingApplication ::BankingApplication()
 {
 
 }
-
-
 void BankingApplication :: run()
 {
+    int choice;
     displayMenu();
-    switch (get_choice())
+    choice = get_choice();
+    switch(choice)
     {
         case 1:
-            // Create a New Account
             CreateAccount();
             break;
-
         case 2:
-            // List Clients and Accounts
-
+            getClientData();
             break;
-
         case 3:
-
-            // Withdraw Money
-
+            Withdraw();
             break;
-
         case 4:
-
-            // Deposit Money
-
+            Deposit();
             break;
+
+        default:
+            cout << "Invalid choice" << endl;
     }
+
+
 }
+
+
+
 
 void BankingApplication :: CreateAccount()
 {
-    string name, address, phone ,id ;
-    char accountType;
+    string name, address, phone ,accountType , id;
     float balance ;
-    bool valid_phone = false;
-    Client c ;
 
-    cout<<"Please Enter Client Name =========>";
+    cin.ignore();
+    cout<<"Please Enter Client Name =========> ";
     getline(cin,name);
-    cin.ignore();
 
-    cout<< "Please Enter Client Address =======>";
+    cin.ignore();
+    cout<< "Please Enter Client Address =======> ";
     getline(cin,address);
-    cin.ignore();
 
-    while (!valid_phone)
+
+    cout<<"Please Enter Client Phone =======>";
+    cin>>phone;
+
+    while (true)
     {
-        cout<<"Please Enter Client Phone =======>";
-        cin>>phone;
-        valid_phone = c.isValidPhoneNumber(phone);
-        if (valid_phone)
+        if(cli->isValidPhoneNumber(phone))
             break;
+        else
+        {
+            cout<<"Please Enter Valid Phone =======>";
+            cin>>phone;
+        }
     }
 
-    cout<<"What Type of Account Do You Like? (1) Basic (2) Saving – Type 1 or 2 =========> ";
+    cout<<"What Type of Account Do You Like? (1) Basic (2) Saving – Type 1 or 2 =========>";
     cin>>accountType;
 
-    cout<<"Please Enter the Starting Balance =========> ";
+    cout<<"Please Enter the Starting Balance =========>";
     cin>>balance;
 
-    id = "FCAI-001";
-    switch (accountType)
+    id = "FCAI-";
+    string get_last_id = to_string(number_lines());
+    for (int i = 0; i < 3 - get_last_id.length() ; ++i)
     {
-        case '1':
-        {
-            BankAccount b (id ,balance);
-            bptr = &b;
-
-            cptr->set_bank_account(bptr);
-        }
-            break;
-
-        case '2':
-        {
-            SavingBankAccount sb (id ,balance);
-            bptr = &b;
-
-            cptr->set_bank_account(bptr);
-        }
-
-
-            break;
-
+        id += '0';
     }
 
+    id += get_last_id;
 
 
+    cout<<"An account was created with ID "<< id << " and Starting Balance " << balance << " L.E.";
 
 
-    cout<<"An account was created with ID "<< id << "and Starting Balance " << balance << " L.E.";
-
-    Client cli (name ,address , phone);
-    cptr = &cli;
-
-
-
+    ofstream file("tst.txt", ios :: app);
+    BankAccount *ba = new BankAccount(id,balance);
+    Client *c = new Client(name, address, phone);
+    c->set_bank_account(ba);
+    file << c->get_name() << "," << c->get_address() << "," << c->get_phone_number() << "," << c->get_bank_account()->getAccountId() << "," << c->get_bank_account()->getBalance() << endl;
+    file.close();
 
 }
 
-//void BankingApplication :: add_to_file()
-//{
-//    fstream dataFile;
-//    dataFile.open
-//}
-//void BankingApplication ::Get_client_data()
-//{
-//
-//}
+void BankingApplication :: getClientData()
+{
+    ifstream file("tst.txt");
+    string name, address, phone, acc_id;
+    float bal;
+    while(file >> name >> address >> phone >> acc_id >> bal)
+    {
+        BankAccount *ba = new BankAccount(acc_id,bal);
+        Client *c = new Client(name, address, phone);
+        c->set_bank_account(ba);
+        cout << "-------------------- " << c->get_name() << " --------------------" << endl;
+        cout << "Address: " << c->get_address() << endl;
+        cout << "Phone Number: " << c->get_phone_number() << endl;
+        cout << "Account ID: " << c->get_bank_account()->getAccountId() << endl;
+        cout << "Balance: " << c->get_bank_account()->getBalance() << endl;
+
+    }
+    file.close();
+}
+
+
+void BankingApplication :: Withdraw()
+{
+    string acc_id;
+    float amount;
+    cout << "Enter Account ID: ";
+    cin >> acc_id;
+
+
+    cout << "Account ID: " << bAccount->getAccountId() << endl;
+    cout << "Account Type: " << endl;
+    cout << "Balance" << bAccount->getBalance() << endl;
+    cout << "Please Enter The Amount to Withdraw: ";
+    cin >> amount;
+    ifstream file("tst.txt");
+    string name, address, phone, acc_id1;
+    float bal;
+    while(file >> name >> address >> phone >> acc_id1 >> bal)
+    {
+        if(acc_id1 == acc_id)
+        {
+            BankAccount *ba = new BankAccount(acc_id1,bal);
+            Client *c = new Client(name, address, phone);
+            c->set_bank_account(ba);
+            c->get_bank_account()->withdraw(amount);
+            cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+        }
+    }
+    file.close();
+}
+
+
+void BankingApplication :: Deposit()
+{
+    string acc_id;
+    float amount;
+    cout << "Enter Account ID: ";
+    cin >> acc_id;
+    cout << "Please Enter The Amount to Deposit: ";
+    cin >> amount;
+    ifstream file("tst.txt");
+    string name, address, phone, acc_id1;
+    float bal;
+    while(file >> name >> address >> phone >> acc_id1 >> bal)
+    {
+        if(acc_id1 == acc_id)
+        {
+            BankAccount *ba = new BankAccount(acc_id1,bal);
+            Client *c = new Client(name, address, phone);
+            c->set_bank_account(ba);
+            c->get_bank_account()->deposit(amount);
+            cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+        }
+    }
+    file.close();
+}
+
+
+
+
+int number_lines()
+{
+    char ch;
+    int lineNum = 0;
+    fstream Target ("tst.txt");
+
+    Target.get(ch);
+    while (Target)
+    {
+        if (ch == '\n')
+        {
+            lineNum += 1;
+        }
+        Target.get(ch);
+    }
+    Target.close();
+    return lineNum;
+
+}

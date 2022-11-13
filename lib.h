@@ -2,6 +2,7 @@
 #define ASSIGNMENT2_OOP_BANK_SYSTEM_LIB_H
 
 #include <iostream>
+#include <fstream>
 #include <regex>
 using namespace std;
 
@@ -18,7 +19,8 @@ public:
     void CreateAccount();
     bool withdraw(float amount);
     void deposit(float amount);
-
+    string getAccountId();
+    float getBalance();
 };
 
 
@@ -43,7 +45,6 @@ class Client
 
     public:
         Client(string c_name, string c_address, string c_phone_number);
-        Client();
         bool isValidPhoneNumber(string input);
         string get_name();
         string get_address();
@@ -59,17 +60,18 @@ protected:
 
     void displayMenu();
     int get_choice();
-    void add_to_file();
-    Client *cptr;
-    BankAccount *bptr;
+    Client* cli;
+    BankAccount* bAccount;
 
 public:
     BankingApplication();
-    void run();
-
+    void getClientData();
     void CreateAccount();
-    void Get_client_data();
+    void Withdraw();
+    void Deposit();
+    void run();
 };
+int number_lines();
 
 
 #endif //ASSIGNMENT2_OOP_BANK_SYSTEM_LIB_H
