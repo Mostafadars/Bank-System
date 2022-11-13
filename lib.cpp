@@ -15,7 +15,7 @@ BankAccount :: BankAccount(string acc,float bal)
 
 bool BankAccount :: withdraw(float amount)
 {
-    if(amount >= balance)
+    if(amount <= balance)
     {
         balance -= amount;
         return true;
@@ -119,7 +119,7 @@ void BankingApplication :: displayMenu()
 int BankingApplication :: get_choice()
 {
     int choice ;
-    cout << "Please Enter Choice =========> ";
+    cout << "Please Enter Choice =========>";
     cin >> choice;
     return choice;
 }
@@ -219,16 +219,33 @@ void BankingApplication :: getClientData()
     ifstream file("tst.txt");
     string name, address, phone, acc_id;
     float bal;
-    while(file >> name >> address >> phone >> acc_id >> bal)
+    while(!file.eof())
     {
+        getline(file,name,',');
+        if (name == "")
+            break;
+
+        getline(file,address,',');
+        getline(file,phone,',');
+        getline(file,acc_id,',');
+        file>>bal;
+
+
         BankAccount *ba = new BankAccount(acc_id,bal);
         Client *c = new Client(name, address, phone);
         c->set_bank_account(ba);
-        cout << "-------------------- " << c->get_name() << " --------------------" << endl;
+        string accountHeader = "-------------------- " + c->get_name() + " --------------------";
+        cout << accountHeader << endl;
         cout << "Address: " << c->get_address() << endl;
         cout << "Phone Number: " << c->get_phone_number() << endl;
         cout << "Account ID: " << c->get_bank_account()->getAccountId() << endl;
         cout << "Balance: " << c->get_bank_account()->getBalance() << endl;
+
+        delete c;
+        delete ba;
+
+        char new_line;
+        file.get(new_line);
 
     }
     file.close();
@@ -239,30 +256,48 @@ void BankingApplication :: Withdraw()
 {
     string acc_id;
     float amount;
-    cout << "Enter Account ID: ";
+    cout << "Enter Account ID:";
     cin >> acc_id;
 
 
-    cout << "Account ID: " << bAccount->getAccountId() << endl;
-    cout << "Account Type: " << endl;
-    cout << "Balance" << bAccount->getBalance() << endl;
-    cout << "Please Enter The Amount to Withdraw: ";
-    cin >> amount;
+
     ifstream file("tst.txt");
     string name, address, phone, acc_id1;
     float bal;
-    while(file >> name >> address >> phone >> acc_id1 >> bal)
+    while(!file.eof())
     {
+        getline(file,name,',');
+        if (name == "")
+            break;
+
+        getline(file,address,',');
+        getline(file,phone,',');
+        getline(file,acc_id1,',');
+        file>>bal;
         if(acc_id1 == acc_id)
         {
+            cout << "Account ID: " << acc_id1 << endl;
+            cout << "Account Type: " << endl;
+            cout << "Balance: " << bal << endl;
+            cout << "Please Enter The Amount to Withdraw:";
+            cin >> amount;
             BankAccount *ba = new BankAccount(acc_id1,bal);
             Client *c = new Client(name, address, phone);
             c->set_bank_account(ba);
-            c->get_bank_account()->withdraw(amount);
-            cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+
+
+            if(c->get_bank_account()->withdraw(amount))
+            {
+                file.close();
+                cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+                update_file(acc_id,c->get_bank_account()->getBalance());
+            }
+            else
+                cout << "Sorry no enough Balance" << endl;
         }
     }
-    file.close();
+    if(file.is_open())
+        file.close();
 }
 
 
@@ -270,25 +305,44 @@ void BankingApplication :: Deposit()
 {
     string acc_id;
     float amount;
-    cout << "Enter Account ID: ";
+    cout << "Enter Account ID:";
     cin >> acc_id;
-    cout << "Please Enter The Amount to Deposit: ";
-    cin >> amount;
+
     ifstream file("tst.txt");
     string name, address, phone, acc_id1;
     float bal;
-    while(file >> name >> address >> phone >> acc_id1 >> bal)
+    while(!file.eof())
     {
+        getline(file,name,',');
+        if (name == "")
+            break;
+
+        getline(file,address,',');
+        getline(file,phone,',');
+        getline(file,acc_id1,',');
+        file>>bal;
         if(acc_id1 == acc_id)
         {
+            cout << "Account ID: " << acc_id1 << endl;
+            cout << "Account Type: " << endl;
+            cout << "Balance: " << bal << endl;
+            cout << "Please Enter The Amount to Deposit:";
+            cin >> amount;
             BankAccount *ba = new BankAccount(acc_id1,bal);
             Client *c = new Client(name, address, phone);
             c->set_bank_account(ba);
+
+
             c->get_bank_account()->deposit(amount);
             cout << "New Balance: " << c->get_bank_account()->getBalance() << endl;
+            file.close();
+            update_file(acc_id,c->get_bank_account()->getBalance());
+
+
         }
     }
-    file.close();
+    if(file.is_open())
+        file.close();
 }
 
 
@@ -311,5 +365,39 @@ int number_lines()
     }
     Target.close();
     return lineNum;
+
+}
+
+
+void update_file(string id ,float new_bal)
+{
+    ifstream file("tst.txt");
+    ofstream target("new.txt");
+    string name, address, phone, acc_id;
+    float bal;
+    while(!file.eof())
+    {
+        getline(file,name,',');
+        if (name == "")
+            break;
+
+        getline(file,address,',');
+        getline(file,phone,',');
+        getline(file,acc_id,',');
+        file>>bal;
+        target << name << ',' << address << ',' << phone << ',' <<acc_id << ',';
+        if(acc_id == id)
+        {
+            target << new_bal;
+        }
+        else
+        {
+            target << bal;
+        }
+    }
+    file.close();
+    target.close();
+    remove("tst.txt");
+    rename("new.txt","tst.txt");
 
 }

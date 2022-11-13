@@ -72,6 +72,7 @@ public:
     void run();
 };
 int number_lines();
+void update_file(string id,float new_bal);
 
 
 #endif //ASSIGNMENT2_OOP_BANK_SYSTEM_LIB_H
