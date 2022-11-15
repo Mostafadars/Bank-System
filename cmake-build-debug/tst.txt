@@ -4,3 +4,4 @@ Osama Mamdouh,10 street nor hnak,01598765432,Basic,FCAI-002,6400
 ِahmed gafadf,fadfadsfa4df54ed,01125443179,Saving,FCAI-003,7500
 aflkdajfdfadf,fadkjfadhfueiyouiared,01112222453,Basic,FCAI-004,1700
 ahmed ali,ajkl;djfadf,01122441310,Basic,FCAI-005,2500
+Mahmoud Yasser,4 street El-Tahrer,01125897634,Saving,FCAI-006,32200
