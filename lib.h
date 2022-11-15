@@ -63,6 +63,7 @@ protected:
     void displayMenu();
     int get_choice();
     Client* cli;
+    bool isValidID(string id);
 
 public:
     BankingApplication();
@@ -71,6 +72,7 @@ public:
     void Withdraw();
     void Deposit();
     void run();
+
 };
 int number_lines();
 void update_file(string id,float new_bal);

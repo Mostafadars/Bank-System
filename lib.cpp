@@ -229,7 +229,7 @@ void BankingApplication :: CreateAccount()
         c->set_bank_account(ba);
         file << c->get_name() << "," << c->get_address() << "," << c->get_phone_number() << "," << c->get_bank_type() << "," << c->get_bank_account()->getAccountId() << "," << c->get_bank_account()->getBalance() << endl;
     }
-    
+
     else
     {
         BankAccount *ba = new BankAccount(id,balance);
@@ -288,8 +288,21 @@ void BankingApplication :: Withdraw()
 {
     string acc_id;
     float amount;
+    bool found = false;
     cout << "Enter Account ID:";
     cin >> acc_id;
+    while (true)
+    {
+        if (isValidID(acc_id))
+            break;
+
+        else
+        {
+            cout<<"Please Enter a Valid Account ID:";
+            cin >> acc_id;
+        }
+
+    }
 
 
 
@@ -309,6 +322,7 @@ void BankingApplication :: Withdraw()
         file >> bal;
         if(acc_id1 == acc_id)
         {
+            found = true;
             cout << "Account ID: " << acc_id1 << endl;
             cout << "Account Type: " << accountType <<endl;
             cout << "Balance: " << bal << endl;
@@ -352,6 +366,10 @@ void BankingApplication :: Withdraw()
     }
     if(file.is_open())
         file.close();
+
+
+    if(!found)
+        cout << "No Matching Account ID in our database :("<<endl;
 }
 
 
@@ -359,8 +377,21 @@ void BankingApplication :: Deposit()
 {
     string acc_id;
     float amount;
+    bool found = false;
     cout << "Enter Account ID:";
     cin >> acc_id;
+    while (true)
+    {
+        if (isValidID(acc_id))
+            break;
+
+        else
+        {
+            cout<<"Please Enter a Valid Account ID:";
+            cin >> acc_id;
+        }
+
+    }
 
     ifstream file("tst.txt");
     string name, address, phone, acc_id1, accountType;
@@ -378,6 +409,7 @@ void BankingApplication :: Deposit()
         file>>bal;
         if(acc_id1 == acc_id)
         {
+            found = true;
             cout << "Account ID: " << acc_id1 << endl;
             cout << "Account Type: " << accountType <<endl;
             cout << "Balance: " << bal << endl;
@@ -417,8 +449,16 @@ void BankingApplication :: Deposit()
     }
     if(file.is_open())
         file.close();
+
+    if(!found)
+        cout << "No Matching Account ID in our database :("<<endl;
 }
 
+bool BankingApplication::isValidID(string id)
+{
+    regex valid_id ( "[F][C][A][I][-][0-9]{3}");
+    return regex_match(id,valid_id);
+}
 
 
 
@@ -476,3 +516,4 @@ void update_file(string id ,float new_bal)
     rename("new.txt","tst.txt");
 
 }
+
