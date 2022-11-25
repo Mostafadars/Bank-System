@@ -1,7 +1,3 @@
-Mostafa Ali,5 street el-huda,01128195095,Basic,FCAI-000,5000
-Mahmoud Mohamed,7 street el-horya,01234567891,Saving,FCAI-001,9000
-Osama Mamdouh,10 street nor hnak,01598765432,Basic,FCAI-002,6400
-ِahmed gafadf,fadfadsfa4df54ed,01125443179,Saving,FCAI-003,7500
-aflkdajfdfadf,fadkjfadhfueiyouiared,01112222453,Basic,FCAI-004,1700
-ahmed ali,ajkl;djfadf,01122441310,Basic,FCAI-005,2500
-Mahmoud Yasser,4 street El-Tahrer,01125897634,Saving,FCAI-006,32200
+Mostafa Ali ,17 street El-Huda,01128195095,Basic,FCAI-000,7000
+Mahmoud Mohamed,5 street El-masged,01123456789,Basic,FCAI-001,5000
+Osama Mamdouh,13 street nor el-brka,01595476348,Saving,FCAI-002,3000
